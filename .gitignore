@@ -1,0 +1,40 @@
+# ===== Keil MDK 编译产物（不需要上传）=====
+Objects/
+Listings/
+DebugConfig/
+*.o
+*.d
+*.crf
+*.dep
+*.lnp
+*.axf
+*.hex
+*.bin
+*.elf
+*.lib
+*.map
+*.sct
+*.lst
+*.htm
+*.iex
+*.l1p
+*.l2p
+*.build_log.htm
+*.__i
+*.Scr
+*._ia
+
+# ===== Keil 本机个性化设置（换电脑就失效）=====
+*.uvguix.*
+*.uvgui.*
+*.uvoptx
+
+# ===== 备份与临时文件 =====
+*.bak
+*.tmp
+*~
+
+# ===== 操作系统垃圾文件 =====
+Thumbs.db
+desktop.ini
+.DS_Store
