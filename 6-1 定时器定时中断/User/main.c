@@ -15,7 +15,6 @@ int main(void)
 	while(1)
 	{
 		OLED_ShowNum(1, 5, Num, 5);   // 主循环只负责刷新显示，计数动作在定时器中断里完成
-		//OLED_ShowNum(2, 5, TIM_GetCounter(TIM2), 5);   // 调试用：直接读 TIM2 当前计数值
 	}
 }
 

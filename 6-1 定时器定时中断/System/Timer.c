@@ -31,13 +31,6 @@ void Timer_Init(void)
 	TIM_Cmd(TIM2, ENABLE);   // 启动 TIM2，计数器开始累加
 }
 
-/*
-void TIM2_IRQHandler(void)
-{
-	if (TIM_GetITStatus(TIM2, TIM_IT_Update) == SET)
-	{
+// 注意：中断服务函数 TIM2_IRQHandler 写在 User/main.c 里（和 Num 的定义放一起），
+// 本文件不再定义，避免两处重复定义导致链接报错。
 
-		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
-	}
-}
-*/
