@@ -28,6 +28,8 @@ DebugConfig/
 *.uvguix.*
 *.uvgui.*
 *.uvoptx
+# Keil 生成的下载脚本，内容是本机绝对路径（含用户名），换电脑必然失效
+Target 1.BAT
 
 # ===== 备份与临时文件 =====
 *.bak
