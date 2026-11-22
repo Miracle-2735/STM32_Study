@@ -22,11 +22,34 @@ EC11 旋转编码器正转计数加、反转计数减，OLED 用有符号数显�
   - `Encoder_Get`：先把 `Encoder_Count` 存到临时变量，再清零，返回临时值（主循环取走一次就清零，避免同一格被重复累加）
 - `User/main.c`：`Num += Encoder_Get()`，`OLED_ShowSignedNum` 显示带符号结果
 
-## 11-22 改动：双边沿 → 只下降沿
+## 改造前后逐项对比
 
-原来两相都配 `EXTI_Trigger_Rising_Falling`，现在只配 `EXTI_Trigger_Falling`，中断服务函数一个字没动。这一行改动的依据是数一下"转一格会进几次中断"。
+> 标注说明：**新增** = 改造时新写的；**修改** = 原有内容被改掉；**保留** = 没动；**删除** = 原有内容不再使用。
+> 改造前版本取自首次提交 `a96f5ef`，改造后版本即仓库当前代码。
 
-正转（A 相领先 B 相 90°）：
+### `Hardware/Encoder.c`
+
+| 位置 | 类型 | 改造前 | 改造后 | 说明 |
+|---|---|---|---|---|
+| EXTI 触发方式 | 修改 | `EXTI_Trigger_Rising_Falling`（双边沿） | `EXTI_Trigger_Falling`（只下降沿） | 转一格只进 2 次中断（原来 4 次），触点抖动机会减半 |
+| `EXTI0_IRQHandler`（A 相） | 保留 | 若 PB1 为低则 `Encoder_Count--` | 原样 | 方向判断逻辑没动 |
+| `EXTI1_IRQHandler`（B 相） | 保留 | 若 PB0 为低则 `Encoder_Count++` | 原样 | 方向判断逻辑没动 |
+| `Encoder_Init` 其余部分 | 保留 | GPIOB/AFIO 时钟、PB0/PB1 上拉 IPU、Line0/Line1 映射、NVIC 两个通道 | 原样 | 硬件初始化逻辑没变 |
+| `Encoder_Get` | 保留 | 存临时变量后清零、返回临时值 | 原样 | 主循环取走一次就清零 |
+
+本次改造唯一的代码差异（仅一行）：
+
+```c
+// 改造前（双边沿）
+EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
+
+// 改造后（只下降沿）
+EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
+```
+
+## 为什么这么改（相位推导）
+
+数一下"转一格会进几次中断"。正转（A 相领先 B 相 90°）：
 
 | 事件 | 引脚电平 | 是否触发中断 | 中断里的判断 | 结果 |
 |---|---|---|---|---|
