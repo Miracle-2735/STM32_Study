@@ -1,7 +1,7 @@
 #include "stm32f10x.h"
 
 uint16_t CountSensor_Count = 0;
-uint8_t Flag_Count = 0;
+volatile uint8_t Flag_Count = 0;   // 中断置位、主循环清零，跨中断共享必须 volatile
 
 void CountSensor_Init(void)
 {
@@ -36,7 +36,7 @@ uint16_t CountSensor_Get(void)
 {
     return CountSensor_Count;
 }
-// 在 CountSensor.c 里添加这个函数
+// 计数值 +1，由主循环调用
 void CountSensor_Add(void)
 {
     CountSensor_Count ++;
@@ -44,7 +44,6 @@ void CountSensor_Add(void)
 
 uint8_t CountSensor_GetFlag(void)
 {
- 
 	return Flag_Count;
 }
 
