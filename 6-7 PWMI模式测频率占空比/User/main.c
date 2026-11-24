@@ -7,19 +7,19 @@
 int main(void)
 {
 	OLED_Init();
-	PWM_Init();     // TIM2_CH1��PA0���� PWM���������ź�Դ
-	IC_Init();      // TIM3_CH1/CH2��PA6��PWMI ģʽ��ͬʱ��Ƶ�ʺ�ռ�ձ�
+	PWM_Init();     // TIM2_CH1（PA0）发 PWM，当被测信号源
+	IC_Init();      // TIM3_CH1/CH2（PA6）PWMI 模式，同时测频率和占空比
 	
-	OLED_ShowString(1, 1, "Freq:00000Hz");   // �� 1 �й̶����� + 5 λƵ������
-	OLED_ShowString(2, 1, "Duty:00%");       // �� 2 �й̶����� + 2 λռ�ձ�����
+	OLED_ShowString(1, 1, "Freq:00000Hz");   // 第 1 行固定文字 + 5 位频率数字
+	OLED_ShowString(2, 1, "Duty:00%");       // 第 2 行固定文字 + 2 位占空比数字
 	
-	// �Բ�ػ���PA0 �öŰ��߶̽ӵ� PA6
+	// 自测回环：PA0 用杜邦线短接到 PA6
 	PWM_SetPrescaler(7200 - 1);      // Freq = 72M / (PSC + 1) / (ARR + 1) = 72M / 7200 / 100 = 100Hz
 	PWM_Setcompare1(80);             // Duty = CCR / (ARR + 1) = 80 / 100 = 80%
 	
 	while(1)
 	{
-		OLED_ShowNum(1, 6, IC_GetFreq(), 5);    // �� 1 �е� 6 ���� 5 λ��Ƶ��
-		OLED_ShowNum(2, 6, IC_GetDuty(), 2);    // �� 2 �е� 6 ���� 2 λ��ռ�ձȣ�%����λ�����ã�
+		OLED_ShowNum(1, 6, IC_GetFreq(), 5);    // 第 1 行第 6 列起 5 位：频率
+		OLED_ShowNum(2, 6, IC_GetDuty(), 2);    // 第 2 行第 6 列起 2 位：占空比（%，两位数够用）
 	}
 }

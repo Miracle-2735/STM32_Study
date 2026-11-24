@@ -1,8 +1,8 @@
 #include "stm32f10x.h"                  // Device header
 
 /*
- * ±¾¹¤³ÌµÄ PWM µ±¡°±»²âĞÅºÅÔ´¡±ÓÃ£ºTIM2_CH1 ´Ó PA0 ·¢·½²¨£¬¶Å°îÏß½Ó»Ø PA6 ¸ø TIM3 µÄ PWMI È¥²â¡£
- * Óë 6-6 µÄ PWM.c ÍêÈ«ÏàÍ¬£¬Ö»ÊÇ main Àï°ÑÆµÂÊ¸Ä³É 100Hz ·½±ã¹Û²ìÕ¼¿Õ±È¡£
+ * æœ¬å·¥ç¨‹çš„ PWM å½“â€œè¢«æµ‹ä¿¡å·æºâ€ç”¨ï¼šTIM2_CH1 ä» PA0 å‘æ–¹æ³¢ï¼Œæœé‚¦çº¿æ¥å› PA6 ç»™ TIM3 çš„ PWMI å»æµ‹ã€‚
+ * ä¸ 6-6 çš„ PWM.c å®Œå…¨ç›¸åŒï¼Œåªæ˜¯ main é‡ŒæŠŠé¢‘ç‡æ”¹æˆ 100Hz æ–¹ä¾¿è§‚å¯Ÿå ç©ºæ¯”ã€‚
  */
 void PWM_Init(void)
 {
@@ -12,10 +12,10 @@ void PWM_Init(void)
 //	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
 //	GPIO_PinRemapConfig(GPIO_PartialRemap1_TIM2, ENABLE);
 //	GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE);
-	// ±¸Ñ¡·½°¸£ºCH1 ÖØÓ³Éäµ½ PA15£¨Òª¹Ø JTAG ²ÅÄÜÓÃ£©£¬±¾¹¤³ÌÈÔ×ßÄ¬ÈÏµÄ PA0£¬¹Ê×¢ÊÍµô
+	// å¤‡é€‰æ–¹æ¡ˆï¼šCH1 é‡æ˜ å°„åˆ° PA15ï¼ˆè¦å…³ JTAG æ‰èƒ½ç”¨ï¼‰ï¼Œæœ¬å·¥ç¨‹ä»èµ°é»˜è®¤çš„ PA0ï¼Œæ•…æ³¨é‡Šæ‰
 	
 	GPIO_InitTypeDef GPIO_InitStructure;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;     // ¸´ÓÃÍÆÍì£¬PWM ±ØĞë×ßÆ¬ÉÏ¶¨Ê±Æ÷Í¨µÀ
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;     // å¤ç”¨æ¨æŒ½ï¼ŒPWM å¿…é¡»èµ°ç‰‡ä¸Šå®šæ—¶å™¨é€šé“
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;      //GPIO_Pin_15;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
@@ -25,8 +25,8 @@ void PWM_Init(void)
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure;
 	TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
 	TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	TIM_TimeBaseInitStructure.TIM_Period = 100 - 1;       //ARR£º100 ¸ö¼ÆÊıÒ»¸öÖÜÆÚ£¬Õ¼¿Õ±È·Ö±æÂÊ 1%
-	TIM_TimeBaseInitStructure.TIM_Prescaler = 720 - 1;     //PSC£ºÄ¬ÈÏ 720 µÃ 1kHz£¬main ÀïÔÙ¸Ä³É 7200 µÃ 100Hz
+	TIM_TimeBaseInitStructure.TIM_Period = 100 - 1;       //ARRï¼š100 ä¸ªè®¡æ•°ä¸€ä¸ªå‘¨æœŸï¼Œå ç©ºæ¯”åˆ†è¾¨ç‡ 1%
+	TIM_TimeBaseInitStructure.TIM_Prescaler = 720 - 1;     //PSCï¼šé»˜è®¤ 720 å¾— 1kHzï¼Œmain é‡Œå†æ”¹æˆ 7200 å¾— 100Hz
 	TIM_TimeBaseInitStructure.TIM_RepetitionCounter = 0;
 	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseInitStructure);
 	
@@ -46,9 +46,9 @@ void PWM_Setcompare1(uint16_t Compare)
 	TIM_SetCompare1(TIM2, Compare);
 }
 
-/* ÔËĞĞÊ±¸ÄÔ¤·ÖÆµ£¬¼´¸ÄÊä³öÆµÂÊ£ºFreq = 72MHz / (PSC + 1) / (ARR + 1) */
+/* è¿è¡Œæ—¶æ”¹é¢„åˆ†é¢‘ï¼Œå³æ”¹è¾“å‡ºé¢‘ç‡ï¼šFreq = 72MHz / (PSC + 1) / (ARR + 1) */
 void PWM_SetPrescaler(uint16_t Prescaler)
 {
-	// ÓÃ Immediate Á¢¼´ÖØÔØ£¬¸ÄÍêÆµÂÊµ±³¡ÉúĞ§£»·ñÔòÒªµÈÏÂÒ»´Î¸üĞÂÊÂ¼ş²Å×°ÔØ£¬¶ÁÊı»áÂı°ëÅÄ
+	// ç”¨ Immediate ç«‹å³é‡è½½ï¼Œæ”¹å®Œé¢‘ç‡å½“åœºç”Ÿæ•ˆï¼›å¦åˆ™è¦ç­‰ä¸‹ä¸€æ¬¡æ›´æ–°äº‹ä»¶æ‰è£…è½½ï¼Œè¯»æ•°ä¼šæ…¢åŠæ‹
 	TIM_PrescalerConfig(TIM2, Prescaler, TIM_PSCReloadMode_Immediate);
 }
