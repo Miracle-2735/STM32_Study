@@ -16,6 +16,7 @@ int main(void)
 	// 自测回环：PA0 用杜邦线短接到 PA6
 	PWM_SetPrescaler(7200 - 1);      // Freq = 72M / (PSC + 1) / (ARR + 1) = 72M / 7200 / 100 = 100Hz
 	PWM_Setcompare1(80);             // Duty = CCR / (ARR + 1) = 80 / 100 = 80%
+	                                 // 抓 20% 对照图时把这句改成 20，屏上 Duty 应随之变 20%，见 README 的"20% 对照"
 	
 	while(1)
 	{
